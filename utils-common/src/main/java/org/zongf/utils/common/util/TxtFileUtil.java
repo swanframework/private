@@ -31,7 +31,7 @@ public class TxtFileUtil {
      * @time: 2019-06-11 15:09:28
      */
     public static List<String> readFile(String filePath){
-        return readFile(filePath, line -> true, ENCODING_UTF8);
+        return readFile(filePath, line -> false, ENCODING_UTF8);
     }
 
     /**
@@ -44,7 +44,7 @@ public class TxtFileUtil {
      * @time: 2019-06-11 15:09:28
      */
     public static List<String> readFile(String filePath, String encoding){
-        return readFile(filePath, line -> true, encoding);
+        return readFile(filePath, line -> false, encoding);
     }
 
     /**
