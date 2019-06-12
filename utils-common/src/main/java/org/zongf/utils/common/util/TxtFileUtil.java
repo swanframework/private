@@ -1,4 +1,4 @@
-package org.zongf.utils.common;
+package org.zongf.utils.common.util;
 
 import java.io.*;
 import java.util.ArrayList;
