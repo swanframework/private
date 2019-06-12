@@ -270,7 +270,7 @@ public class TxtFileUtil {
 
     /**
      * @Description: 手工关闭流
-     * @param closeable
+     * @param closeable 任意可关闭对象
      * @since 1.0
      * @author: zongf
      * @time: 2019-06-11 15:08:41
