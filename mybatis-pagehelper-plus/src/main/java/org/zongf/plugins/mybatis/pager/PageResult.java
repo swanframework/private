@@ -1,4 +1,4 @@
-package org.zongf.plugin.mybatis.pagehelper;
+package org.zongf.plugins.mybatis.pager;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageInfo;

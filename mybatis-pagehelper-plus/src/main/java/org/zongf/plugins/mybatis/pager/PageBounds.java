@@ -1,4 +1,4 @@
-package org.zongf.plugin.mybatis.pagehelper;
+package org.zongf.plugins.mybatis.pager;
 
 /**
  * @Description: 页码
