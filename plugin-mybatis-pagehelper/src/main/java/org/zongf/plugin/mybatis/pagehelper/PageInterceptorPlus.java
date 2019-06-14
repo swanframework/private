@@ -60,7 +60,7 @@ public class PageInterceptorPlus extends PageInterceptor {
 
         // 封装结果集
         if (pageAble) {
-            return new PageList<>((List) object);
+            return new PageResult<>((List) object);
         }else {
             return object;
         }

@@ -8,14 +8,16 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * @Description:
+ * @Description: 完全copyPageInfo, 只修改了total 赋值地方.
  * @author: zongf
  * @date: 2019-06-13 15:38
  * @since 1.0
  */
 
-public class PageList<T> extends ArrayList<T> {
+public class PageResult<T> extends ArrayList<T> {
+
     private static final long serialVersionUID = 1412759446332294208L;
+
     //当前页
     private int pageNum;
     //每页的数量
@@ -57,7 +59,7 @@ public class PageList<T> extends ArrayList<T> {
 
     private long total;
 
-    public PageList() {
+    public PageResult() {
     }
 
     /**
@@ -65,7 +67,7 @@ public class PageList<T> extends ArrayList<T> {
      *
      * @param list
      */
-    public PageList(List<T> list) {
+    public PageResult(List<T> list) {
         this(list, 8);
     }
 
@@ -75,7 +77,7 @@ public class PageList<T> extends ArrayList<T> {
      * @param list          page结果
      * @param navigatePages 页码数量
      */
-    public PageList(List<T> list, int navigatePages) {
+    public PageResult(List<T> list, int navigatePages) {
         super(list);
         if (list instanceof Page) {
             Page page = (Page) list;
@@ -322,7 +324,7 @@ public class PageList<T> extends ArrayList<T> {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PageList{");
+        final StringBuilder sb = new StringBuilder("PageResult{");
         sb.append("pageNum=").append(pageNum);
         sb.append(", pageSize=").append(pageSize);
         sb.append(", size=").append(size);
