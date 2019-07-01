@@ -4,29 +4,29 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.zongf.utils.common.util.CloseUtil;
+import org.zongf.utils.common.util.ReflectUtil;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
-/**
- * @Description:  csv 文件解析/生成工具类
+/** csv 文件解析/生成工具类
  * @since 1.0
- * @author: zongf
- * @time: 2019-06-12 11:37:57
+ * @author zongf
+ * @created 2019-07-01
  */
 public class CSVUtil {
 
-    /**
-     * @Description: 解析CSV文件为Java 对象集合, 默认情况下, java属性声明顺序与csv列顺序一一对应
+    /**解析CSV文件为Java 对象集合, 默认情况下, java属性声明顺序与csv列顺序一一对应
      * @param csvFilePath 文件路径
      * @param clz 对象类型
      * @param skipFirst 是否跳过文件首行
      * @param ignoreFields 忽略的属性列表
-     * @return: List
+     * @return: List 目标类型列表
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 13:46:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> List<T> parse(String csvFilePath, Class<T> clz, boolean skipFirst, String... ignoreFields) {
 
@@ -54,15 +54,14 @@ public class CSVUtil {
         return parse(csvFilePath, clz, fieldNames, skipFirst);
     }
 
-    /**
-     * @Description: 解析CSV文件为Java 对象集合, 默认情况下, java属性声明顺序与csv列顺序一一对应
+    /**解析CSV文件为Java 对象集合, 默认情况下, java属性声明顺序与csv列顺序一一对应
      * @param csvFilePath 文件路径
      * @param clz 对象类型
      * @param skipFirst 是否跳过文件首行
-     * @return: List
+     * @return: List 目标类型数组
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 13:46:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> List<T> parse(String csvFilePath, Class<T> clz, boolean skipFirst) {
         // 获取类声明字段列表
@@ -78,16 +77,15 @@ public class CSVUtil {
         return parse(csvFilePath, clz, fieldNames, skipFirst);
     }
 
-    /**
-     * @Description: 解析CSV文件为Java 对象集合
+    /**解析CSV文件为Java 对象集合
      * @param csvFilePath 文件路径
      * @param clz 对象类型
      * @param fieldNames csv文件列与java属性映射关系. csv列从左向右, 顺序不能变
      * @param skipFirst 是否跳过文件首行
-     * @return List
+     * @return List 目标类型数组
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 13:46:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> List<T> parse(String csvFilePath, Class<T> clz, String[] fieldNames, boolean skipFirst){
         // 创建保存结果集合
@@ -113,8 +111,7 @@ public class CSVUtil {
 
                 // 设置属性
                 for (String property : fieldNames) {
-                    Field field = clz.getDeclaredField(property);
-                    setValue(field, t, record.get(property));
+                    ReflectUtil.setValueByWriteMethod(t, property, record.get(property));
                 }
                 list.add(t);
             }
@@ -124,57 +121,53 @@ public class CSVUtil {
         return list;
     }
 
-    /**
-     * @Description: 生成csv 文件, 一次性写入文件. 如果文件存在, 则进行覆盖
+    /**生成csv 文件, 一次性写入文件. 如果文件存在, 则进行覆盖
      * @param csvFilePath csv 文件路径名
      * @param contents 文件内容
      * @param titles 文件标题行
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath, List<Object[]> contents, String... titles) {
         write(csvFilePath, true, 0, contents,  titles);
     }
 
-    /**
-     * @Description: 生成csv 文件, 一次性写入文件
+    /**生成csv 文件, 一次性写入文件
      * @param csvFilePath csv 文件路径名
      * @param overrideFile 如果csv文件已存在, 是否进行覆盖
      * @param contents 文件内容
      * @param titles 文件标题行
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath, boolean overrideFile, List<Object[]> contents, String... titles) {
         write(csvFilePath, overrideFile, 0, contents,  titles);
     }
 
-    /**
-     * @Description: 生成csv 文件
+    /**生成csv 文件
      * @param csvFilePath csv 文件路径名
      * @param flushSize 批量刷新行数, 设置为0 表示一次性写入文件
      * @param contents 文件内容
      * @param titles 文件标题行
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath,  int flushSize, List<Object[]> contents, Object... titles) {
         write(csvFilePath, true, 0, contents,  titles);
     }
 
-    /**
-     * @Description: 生成csv 文件
+    /**生成csv 文件
      * @param csvFilePath csv 文件路径名
      * @param overrideFile 如果csv文件已存在, 是否进行覆盖
      * @param flushSize 批量刷新行数, 设置为0 表示一次性写入文件
      * @param contents 文件内容
      * @param titles 文件标题行
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath, boolean overrideFile,  int flushSize, List<Object[]> contents, Object... titles) {
 
@@ -218,62 +211,57 @@ public class CSVUtil {
         } catch (IOException e) {
             throw new RuntimeException("写入csv文件异常!", e);
         } finally {
-            close(csvPrinter);
+            CloseUtil.close(csvPrinter);
         }
     }
 
-    /**
-     * @Description: 生成csv 文件, 文件存在时覆盖, 一次性写入
-     *
+    /**生成csv 文件, 文件存在时覆盖, 一次性写入
      * @param csvFilePath csv 文件路径名
      * @param contents 文件内容
      * @param mapping 文件标题行与字段映射关系
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath, List<T> contents, LinkedHashMap<String, String> mapping) {
         write(csvFilePath, true, 0, contents, mapping);
     }
 
-    /**
-     * @Description: 生成csv 文件, 一次性写入文件
+    /**生成csv 文件, 一次性写入文件
      * @param csvFilePath csv 文件路径名
      * @param overrideFile 如果csv文件已存在, 是否进行覆盖
      * @param contents 文件内容
      * @param mapping 文件标题行与字段映射关系
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath, boolean overrideFile, List<T> contents, LinkedHashMap<String, String> mapping) {
         write(csvFilePath, overrideFile, 0, contents, mapping);
     }
 
-    /**
-     * @Description: 生成csv 文件, 文件存在时覆盖
+    /**生成csv 文件, 文件存在时覆盖
      * @param csvFilePath csv 文件路径名
      * @param flushSize 批量刷新行数, 设置为0 表示一次性写入文件
      * @param contents 文件内容
      * @param mapping 文件标题行与字段映射关系
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath, int flushSize, List<T> contents, LinkedHashMap<String, String> mapping) {
         write(csvFilePath, true, flushSize, contents, mapping);
     }
 
-    /**
-     * @Description: 生成csv 文件
+    /**生成csv 文件
      * @param csvFilePath csv 文件路径名
      * @param overrideFile 如果csv文件已存在, 是否进行覆盖
      * @param flushSize 批量刷新行数, 设置为0 表示一次性写入文件
      * @param contents 文件内容
      * @param mapping 文件标题行与字段映射关系
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:27:15
+     * @author zongf
+     * @created 2019-07-01
      */
     public static <T> void write(String csvFilePath, boolean overrideFile, int flushSize, List<T> contents, LinkedHashMap<String, String> mapping) {
 
@@ -318,72 +306,7 @@ public class CSVUtil {
 
         } catch (Exception e) {
             throw new RuntimeException(csvFilePath + "-csv文件创建异常!", e);
-        } finally {
-            // 关闭字段访问
-            for (Field field : fieldList) {
-                field.setAccessible(false);
-            }
         }
     }
 
-    /**
-     * @Description: 反射为属性赋值
-     * @param field 字段
-     * @param target 目标对象
-     * @param value 值
-     * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 13:55:59
-     */
-    private static void setValue(Field field, Object target, String value) {
-        // 如果value 为null, 则返回
-        if(value == null) return;
-
-        // 设置字段可进行修改
-        field.setAccessible(true);
-
-        try {
-            if (String.class.equals(field.getType())) {
-                field.set(target, value);
-            } else if (int.class.equals(field.getType()) || Integer.class.equals(field.getType())) {
-                field.set(target, Integer.valueOf(value));
-            } else if (float.class.equals(field.getType()) || Float.class.equals(field.getType())) {
-                field.set(target, Float.valueOf(value));
-            } else if (double.class.equals(field.getType()) || Double.class.equals(field.getType())) {
-                field.set(target, Double.valueOf(value));
-            } else if (boolean.class.equals(field.getType()) || Boolean.class.equals(field.getType())) {
-                field.set(target, Boolean.valueOf(value));
-            } else if (char.class.equals(field.getType()) || Character.class.equals(field.getType())) {
-                if (value != null && value.toCharArray().length > 0) {
-                    field.set(target, value.toCharArray()[0]);
-                }
-            } else if (byte.class.equals(field.getType()) || Byte.class.equals(field.getType())) {
-                field.set(target, Byte.valueOf(value));
-            } else if (short.class.equals(field.getType()) || Short.class.equals(field.getType())) {
-                field.set(target, Short.valueOf(value));
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException("设置字段异常, 字段名:" + field.getName() + ", 值:" + value, e);
-        }finally {
-            field.setAccessible(false);
-        }
-    }
-
-
-    /**
-     * @Description: 关闭流
-     * @param closeable 任意可关闭对象
-     * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 14:29:43
-     */
-    private static void close(Closeable closeable) {
-        if (closeable != null) {
-            try {
-                closeable.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
