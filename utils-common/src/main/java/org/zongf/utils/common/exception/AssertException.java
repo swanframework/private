@@ -1,10 +1,9 @@
 package org.zongf.utils.common.exception;
 
-/**
- * @Description: 断言异常
+/** 断言异常
  * @since 1.0
- * @author: zongf
- * @date: 2019-06-12 10:09
+ * @author zongf
+ * @created 2019-07-01
  */
 public class AssertException extends RuntimeException {
 
