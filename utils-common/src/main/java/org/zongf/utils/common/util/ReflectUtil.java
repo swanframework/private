@@ -16,7 +16,7 @@ public class ReflectUtil {
     /**为对象属性赋值, 通过属性setter方法.
      * @param target 目标对象
      * @param property 属性名
-     * @param value 属性值, 类型必须和属性类型一致
+     * @param value 属性值, 如果属性类型非基本类型, 则value类型必须和属性类型一致
      * @throws Exception 属性没有set方法或set方法不可访问, 抛出异常
      * @since 1.0
      * @author zongf
@@ -26,6 +26,10 @@ public class ReflectUtil {
         try {
             PropertyDescriptor descriptor = new PropertyDescriptor(property, target.getClass());
             Method writeMethod = descriptor.getWriteMethod();
+            // 如果类型不一致, 进行类型转换.
+            if (!descriptor.getPropertyType().equals(value.getClass())) {
+                value = StringUtil.convert(value.toString(), descriptor.getPropertyType());
+            }
             writeMethod.invoke(target, value);
         } catch (Exception e) {
             throw new ReflectException("对象属性赋值异常!",e);
@@ -35,17 +39,17 @@ public class ReflectUtil {
     /**获取对象属性值, 通过属性getter方法.
      * @param target 目标对象
      * @param property 属性
-     * @return Object 返回对象属性值, 可强转换为属性真实类型
+     * @return T 返回属性值
      * @throws Exception 属性没有getter方法, 或getter方法不可访问时,抛出异常
      * @since 1.0
      * @author zongf
      * @created 2019-06-12
      */
-    public static Object getValueByReadMethod(Object target, String property) {
+    public static <T> T getValueByReadMethod(Object target, String property) {
         try {
             PropertyDescriptor descriptor = new PropertyDescriptor(property, target.getClass());
             Method readMethod = descriptor.getReadMethod();
-            return readMethod.invoke(target);
+            return (T) readMethod.invoke(target);
         } catch (Exception e) {
             throw new ReflectException("获取对象属性值异常",e);
         }
@@ -54,7 +58,7 @@ public class ReflectUtil {
     /**为对象属性赋值, 通过属性直接赋值
      * @param target 目标对象
      * @param property 属性名
-     * @param value 类型必须和属性类型一致
+     * @param value 属性值, 如果属性类型非基本类型, 则value类型必须和属性类型一致
      * @since 1.0
      * @author zongf
      * @created 2019-06-12
@@ -74,6 +78,10 @@ public class ReflectUtil {
                 declaredField.setAccessible(true);
             }
 
+            // 如果类型不一致, 进行类型转换.
+            if (!declaredField.getType().equals(value.getClass())) {
+                value = StringUtil.convert(value.toString(), declaredField.getType());
+            }
             declaredField.set(target, value);
         } catch (Exception e) {
             throw new RuntimeException("对象属性赋值异常!",e);
@@ -88,12 +96,12 @@ public class ReflectUtil {
     /**获取对象属性值, 通过属性直接获取
      * @param target 目标对象
      * @param property 属性名
-     * @return: Object 返回属性实际类型,可强转为属性真实类型
+     * @return: T 返回属性值
      * @since 1.0
      * @author zongf
      * @created 2019-06-12
      */
-    public static Object getValueByField(Object target, String property) {
+    public static <T> T getValueByField(Object target, String property) {
 
         Field declaredField = null;
 
@@ -108,7 +116,7 @@ public class ReflectUtil {
                 declaredField.setAccessible(true);
             }
 
-            return declaredField.get(target);
+            return (T) declaredField.get(target);
         } catch (Exception e) {
             throw new ReflectException("获取对象属性值异常!",e);
         } finally {
