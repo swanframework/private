@@ -10,6 +10,10 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>utils-common</module>
+        <module>utils-csv</module>
+        <module>utils-http</module>
+        <module>docs</module>
+        <module>mybatis-pagehelper-plus</module>
     </modules>
 
 
