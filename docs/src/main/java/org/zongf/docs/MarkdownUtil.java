@@ -8,21 +8,19 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- * @Description: 生成MarkDown格式的文档
+/** 生成MarkDown格式的API文档
  * @since 1.0
- * @author: zongf
- * @date: 2019-06-12 15:57
+ * @author zongf
+ * @created 2019-07-01
  */
 public class MarkdownUtil {
 
-    /**
-     * @Description: 批量生成markdown 文档
+    /**批量生成markdown 文档
      * @param utildir 工具类目录
      * @param mdFileDir 生成markdown 文件目录
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 17:32:22
+     * @author zongf
+     * @created 2019-07-01
      */
     public static void createMDDocs(String utildir, String mdFileDir) {
 
@@ -39,13 +37,12 @@ public class MarkdownUtil {
 
     }
 
-    /**
-     * @Description: 生成markdown 文档
+    /**生成markdown 文档
      * @param utilFilePath 工具类地址
      * @param mdFileDir md文件生成目录
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 17:20:11
+     * @author zongf
+     * @created 2019-07-01
      */
     public static void createMDDoc(String utilFilePath, String mdFileDir) {
 
@@ -61,13 +58,12 @@ public class MarkdownUtil {
         createFile(utilFilePath, mdFileDir, lines);
     }
 
-    /**
-     * @Description: 获取API表格内容
+    /**获取API表格内容
      * @param utilFilePath 工具类路径
      * @return: List
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 17:18:38
+     * @author zongf
+     * @created 2019-07-01
      */
     private static List<String> getApiTable(String utilFilePath) {
 
@@ -80,7 +76,7 @@ public class MarkdownUtil {
         contentList.forEach(line->line.trim());
 
         // 注释, 方法, 结束关键字
-        String commentTag = "@Description:";
+        String commentTag = String.valueOf("/**");
         String methodTag = "public static";
         String paramTag = "@param";
 
@@ -96,7 +92,7 @@ public class MarkdownUtil {
 
         for (String line : contentList) {
             if(line.contains(commentTag)){
-                description = line.split(commentTag)[1].trim();
+                description = line.split("\\/\\*\\*")[1].trim();
             } else if (line.contains(paramTag)) {
                 // 移除@param字符串
                 line = line.split(paramTag)[1].trim();
@@ -122,14 +118,12 @@ public class MarkdownUtil {
         return lines;
     }
 
-
-    /**
-     * @Description: 生成源代码内容
+    /**生成源代码内容
      * @param utilFilePath 工具类文件地址
      * @return: List 文件内容
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 17:16:39
+     * @author zongf
+     * @created 2019-07-01
      */
     private static List<String> getSourceCode(String utilFilePath){
         // 读取源代码内容
@@ -147,14 +141,13 @@ public class MarkdownUtil {
         return lines;
     }
 
-    /**
-     * @Description:
+    /**生成markdown文件
      * @param utilFilePath 工具类路径
      * @param mdFileDir md文件生成目录
      * @param lines 文件内容
      * @since 1.0
-     * @author: zongf
-     * @time: 2019-06-12 17:15:38
+     * @author zongf
+     * @created 2019-07-01
      */
     private static void createFile(String utilFilePath, String mdFileDir, List<String> lines) {
         // 获取文件简单名称
