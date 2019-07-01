@@ -10,7 +10,7 @@ import java.lang.reflect.Proxy;
  * @author zongf
  * @created 2019-06-28
  */
-public class ProxyUtil {
+public class DynamicProxyUtil {
 
     /** 获取动态代理对象
      * @param target 动态代理目标对象
