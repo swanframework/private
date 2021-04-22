@@ -10,7 +10,7 @@
     <version>1.0-RELEASE</version>
 
     <properties>
-        <mybatis.version>3.4.6</mybatis.version>
+        <mybatis.version>3.5.6</mybatis.version>
         <mybatis.pagehelper.version>5.1.10</mybatis.pagehelper.version>
     </properties>
 
